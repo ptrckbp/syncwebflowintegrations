@@ -252,9 +252,9 @@ const main = async () => {
       integrations.push(...response.data.rows);
 
       offset += limit;
-      const { count } = response.data;
+      const { hasMore } = response.data;
 
-      if (offset > count || integrations.length === 0) {
+      if (!hasMore) {
         break;
       }
     }
@@ -272,6 +272,7 @@ const main = async () => {
 
   const syncBotpressSide = async () => {
     const integrations = await getAllIntegrations();
+    
 
     await createOrUpdateIntegrations(integrations);
   };
