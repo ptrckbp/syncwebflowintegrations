@@ -9,7 +9,11 @@ const env = {
 const event = {
   botId: process.env.BOTPRESS_BOT_ID,
 };
+
+
 const main = async () => {
+
+
   // start botpress code
   // define variables from environment variables
   const webflowKey = env.webflowKey;
@@ -24,7 +28,7 @@ const main = async () => {
     const response = await axios.put(
       `https://api.botpress.cloud/v1/tables/${tableId}/rows`,
       {
-        rows, // [{id, bpIntegrationId, webflowItemId,bpUpdatedAt,bpCreatedAt,needsSync}]
+        rows, // [{id, bpIntegrationId, bpIntegrationName, webflowItemId,bpUpdatedAt,bpCreatedAt,needsSync}]
       },
       {
         headers: {
@@ -126,7 +130,7 @@ const main = async () => {
         },
       ]);
       console.log(
-        `updated item bpIntegrationId: ${integration.bpIntegrationId} webflowItemId: ${integration.webflowItemId}`
+        `updated item bpIntegrationName: ${integration.bpIntegrationName} webflowItemId: ${integration.webflowItemId}`
       );
     } else {
       // create
@@ -149,7 +153,7 @@ const main = async () => {
         },
       ]);
       console.log(
-        `created item bpIntegrationId: ${integration.bpIntegrationId} webflowItemId: ${response.data.id}`
+        `created item bpIntegrationName: ${integration.bpIntegrationName} webflowItemId: ${response.data.id}`
       );
     }
   };
@@ -158,6 +162,7 @@ const main = async () => {
     // first let's convert them to the right format
     const rows = integrations.map((integration) => {
       return {
+        bpIntegrationName: integration.name,
         bpIntegrationId: integration.id,
         bpUpdatedAt: integration.updatedAt,
         bpCreatedAt: integration.createdAt,
@@ -172,7 +177,7 @@ const main = async () => {
         const response = await axios.post(
           `https://api.botpress.cloud/v1/tables/${tableId}/rows/find`,
           {
-            filter: { bpIntegrationId: { $eq: row.bpIntegrationId } },
+            filter: { bpIntegrationName: { $eq: row.bpIntegrationName } },
           },
           {
             headers: {
